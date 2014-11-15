@@ -1,5 +1,7 @@
-require "spaux/version"
+require 'spaux/version'
 
-module Spaux
-  # Your code goes here...
+class Spaux
+  def whatever
+    'whatever'
+  end
 end

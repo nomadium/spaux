@@ -9,6 +9,15 @@ describe Spaux do
   end
 end
 
+describe Spaux::Chef::Client do
+  describe '#new' do
+    it 'has a work dir' do
+      client = Spaux::Chef::Client.new
+      expect(client).to respond_to(:work_dir)
+    end
+  end
+end
+
 describe Spaux::CLI do
   describe '#whatever' do
     it 'prints "whatever" in stdout' do

@@ -1,4 +1,5 @@
 require 'spaux/version'
+require 'spaux/cli'
 
 class Spaux
   def whatever

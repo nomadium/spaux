@@ -25,5 +25,32 @@ class Spaux
       client = Spaux::Chef::Client.new(work_dir)
       client.run
     end
+    desc 'savekey', 'Show/save private chef key'
+    option :file, :type => :string
+    def savekey
+      key = Spaux::Chef::RawKey
+      if !options[:file]
+        puts key
+      else
+        ::File.write(options[:file], key)
+      end
+    end
+
+#    private
+#    def get_work_dir(options)
+#      dir = options[:dir]
+#      current = options[:current]
+#      if !dir
+#        work_dir = if ENV['SPAUX_HOME']
+#          ENV['SPAUX_HOME']
+#        elsif current
+#          ::File.join(ENV['PWD'], 'current')
+#        else
+#          Dir.mktmpdir
+#        end
+#      else
+#        work_dir = dir
+#      end
+#    end
   end
 end

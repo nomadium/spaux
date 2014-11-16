@@ -1,31 +1,22 @@
 {
-  "action":"converge",
   "spaux":{
-    "name":"xanadu",
+    "machine":{
+      "action":"converge",
+      "key_name":"fancy",
+      "name":"xanadu",
+      "runlist":[
+        "ufw",
+        "hostname",
+        "apt",
+        "git",
+        "users::sysadmins",
+        "sudo"
+      ]
+    },
     "digital_ocean":{
       "bootstrap_options":{
         "flavor_name":"512MB"
       }
-    },
-    "machine":{
-      "with_rvm":false,
-      "runlist":[
-        "apt",
-        "hostname",
-        "git",
-        "ufw",
-        "users::sysadmins",
-        "sudo"
-      ],
-      "attributes":{
-        "firewall":{
-          "rules":[
-            {"http":{"port":"80"}},
-            {"https":{"port":"443"}}
-          ]
-        }
-      }
     }
-  },
-  "override_key_name":"fancy"
+  }
 }

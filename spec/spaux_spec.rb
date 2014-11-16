@@ -26,4 +26,9 @@ describe Spaux::CLI do
       expect { Spaux::CLI.new.converge }.to output(/Starting Chef Client/).to_stdout
     end
   end
+  describe '#savekey' do
+    it 'prints private key in stdout' do
+      expect { Spaux::CLI.new.savekey }.to output(/^-----BEGIN RSA PRIVATE KEY-----/).to_stdout
+    end
+  end
 end

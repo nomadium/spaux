@@ -1,6 +1,10 @@
 # Spaux
 
-TODO: Write a gem description
+This is yet another Ruby gem to automate some Chef and cloud computing tasks.
+
+I was not satisfied with some programmatic features from Opscode code so I went ahead and wrote my own gem.
+
+What I'm aiming for is to centralize credentials (API, SSL keys, etc) in the Chef server (e.g. encrypted data bags or chef-vault), store cloud providers settings there as well (plain data bags and attributes) and have a very very simple CLI to launch new environments.
 
 ## Installation
 
@@ -20,7 +24,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+TODO: Write usage instructions here. Open an issue with questions if you are insterested, I'm still organizing this.
 
 ## Contributing
 

@@ -19,6 +19,7 @@ describe Spaux::Chef::Client do
 end
 
 #describe Spaux::Chef::Key
+#describe Spaux::Chef::Knife
 
 describe Spaux::CLI do
   describe '#converge' do
@@ -29,6 +30,15 @@ describe Spaux::CLI do
   describe '#savekey' do
     it 'prints private key in stdout' do
       expect { Spaux::CLI.new.savekey }.to output(/^-----BEGIN RSA PRIVATE KEY-----/).to_stdout
+    end
+  end
+  describe '#knife' do
+    it 'prints expect knife output in stdout' do
+      begin
+        spaux = Spaux::CLI.new
+      rescue SystemExit
+        expect { spaux.knife("help", "list") }.to output(/help topics/).to_stdout
+      end
     end
   end
 end

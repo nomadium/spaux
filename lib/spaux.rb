@@ -6,15 +6,15 @@ require 'spaux/chef/knife'
 class Spaux
   def self.default_chef_config_dir
     lib_dir = ::File.expand_path(::File::join(__FILE__, '..'))
-    spaux_dir = ::File::join(lib_dir, 'spaux', 'chef')
+    chef_conf_dir = ::File::join(lib_dir, 'spaux', 'chef', 'default')
   end
 
   def self.default_chef_config(component)
     filename = case component
     when :client
-      'default_client.rb'
+      'client.rb'
     when :knife
-      'default_knife.rb'
+      'knife.rb'
     else
       raise 'Unknown component'
     end

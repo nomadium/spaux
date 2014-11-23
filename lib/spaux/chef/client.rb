@@ -1,5 +1,5 @@
 require 'spaux/chef/key'
-require 'spaux/chef/monkey_patches'
+require 'spaux/chef/monkey_patches/client'
 
 class Spaux
   class Chef
@@ -7,27 +7,19 @@ class Spaux
       attr_accessor :work_dir
       attr_accessor :spaux_config
 
-      DEFAULT_CHEF_CONFIG = {
-        config_file:      ::File.join('@work_dir', 'client.rb'),
-        cache_path:       ::File.join('@work_dir', '.chef'),
-        client_key:       ::File.join('@work_dir', 'client.pem'),
-        json_attribs:     ::File.join('@work_dir', 'attributes.json'),
-        chef_server_url:  'https://api.opscode.com/organizations/spaux',
-        ssl_verify_mode:  :verify_peer,
-        node_name:        'spaux',
-        override_runlist: ["recipe[spaux::machine]"]
-      }
-
       def initialize(work_dir, *args)
         @work_dir = work_dir
         chef_config = args.shift  || {}
         spaux_config = args.shift || {}
         super()
 
-        DEFAULT_CHEF_CONFIG.each { |_,v| v.is_a?(String) && v.gsub!(/@work_dir/, @work_dir) }
-        @config.merge! DEFAULT_CHEF_CONFIG.merge(chef_config)
+        default_chef_config = Spaux::default_chef_config(:client)
 
-        default_spaux_config = Spaux::Chef::Key::DEFAULT_SPAUX_CONFIG
+        default_chef_config.each { |_,v| v.is_a?(String) && v.gsub!(/@work_dir/, @work_dir) }
+        @config.merge! default_chef_config.merge(chef_config)
+
+        default_spaux_config = Spaux::default_spaux_config
+
         @spaux_config = default_spaux_config.merge(spaux_config)
         #if !@spaux_config.eql?(default_spaux_config)
           #trigger a reevalutation of the private key

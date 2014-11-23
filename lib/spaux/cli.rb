@@ -10,16 +10,7 @@ class Spaux
     option :current, :type => :boolean, :default => true,
       :desc => 'Create and/or use a working directory in the current directory'
     def converge
-      work_dir = options[:dir]
-      if not work_dir
-        if ENV['SPAUX_HOME']
-          work_dir = ENV['SPAUX_HOME']
-        elsif options[:current]
-          work_dir = ::File.join(ENV['PWD'], 'current')
-        else
-          work_dir = Dir.mktmpdir
-        end
-      end
+      work_dir = get_work_dir(options)
       FileUtils.mkdir_p work_dir
 
       client = Spaux::Chef::Client.new(work_dir)

@@ -1,7 +1,7 @@
 class Chef
   class Knife
    def configure_spaux
-     config.merge!(Spaux::default_config(:knife))
+     config.merge!(Spaux::default_chef_config(:knife))
    end
    def self.run(args, options={})
       # Fallback debug logging. Normally the logger isn't configured until we

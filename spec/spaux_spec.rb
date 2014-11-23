@@ -23,8 +23,12 @@ end
 
 describe Spaux::CLI do
   describe '#converge' do
-    xit 'prints "chef client" in stdout' do
-      expect { Spaux::CLI.new.converge }.to output(/Starting Chef Client/).to_stdout
+    it 'prints "chef client" in stdout' do
+      begin
+        spaux = Spaux::CLI.new
+      rescue SystemExit
+        expect { spaux.converge }.to output(/Starting Chef Client/).to_stdout
+      end
     end
   end
   describe '#savekey' do

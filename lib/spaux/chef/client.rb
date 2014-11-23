@@ -51,6 +51,14 @@ class Spaux
         argv = []
         super
       end
+
+      def run_application
+        begin
+          super
+        rescue SystemExit => e
+          # just ignore chef-client exit
+        end
+      end
     end
   end
 end

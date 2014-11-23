@@ -1,5 +1,5 @@
 require 'spaux/chef/key'
-require 'spaux/chef/monkey_patches'
+require 'spaux/chef/monkey_patches/client'
 
 class Spaux
   class Chef

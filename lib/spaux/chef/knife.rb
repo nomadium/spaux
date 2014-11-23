@@ -1,6 +1,6 @@
 require 'chef/application/knife'
 require 'fileutils'
-require 'spaux/chef/knife_monkey_patches'
+require 'spaux/chef/monkey_patches/knife'
 
 class Spaux
   class Chef

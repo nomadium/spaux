@@ -8,20 +8,19 @@ class Spaux
       attr_accessor :raw_key
       attr_accessor :config
 
-      DEFAULT_SPAUX_CONFIG = {
-        chef_private_key_gist_id: '16b65a73953427ce9c40',
-        private_key:              '~/.ssh/id_rsa',
-        aes_key_size:             256,
-        aes_cipher_mode:          :CBC
-      }
-
       def initialize(config={})
         @work_dir = ::File.join(ENV['PWD'], 'current')
-        @config = config.merge(DEFAULT_SPAUX_CONFIG)
+        @config = config.merge(default_spaux_config)
         @raw_key ||= get_raw_key
       end
 
       private
+      # this is wrong, this should in Spaux class
+      def default_spaux_config
+        spaux_dir = ::File.expand_path(::File::join(__FILE__, '..', '..'))
+        config_file = ::File.join(spaux_dir, 'config.rb')
+        configuration = eval(::File.read(config_file))
+      end
       def get_raw_key
         key_filename = 'encrypted.rb'
         key_file = ::File.join(@work_dir, key_filename)

@@ -18,7 +18,8 @@ class Spaux
         default_chef_config.each { |_,v| v.is_a?(String) && v.gsub!(/@work_dir/, @work_dir) }
         @config.merge! default_chef_config.merge(chef_config)
 
-        default_spaux_config = Spaux::Chef::Key::DEFAULT_SPAUX_CONFIG
+        default_spaux_config = Spaux::default_spaux_config
+
         @spaux_config = default_spaux_config.merge(spaux_config)
         #if !@spaux_config.eql?(default_spaux_config)
           #trigger a reevalutation of the private key

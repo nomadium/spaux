@@ -17,15 +17,15 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "thor"
-  spec.add_dependency "chef", '= 12.0.0.rc.0'
-  spec.add_dependency "octokit"
-  spec.add_dependency "net-ssh"
+  spec.add_dependency "thor", '~> 0.19.1'
+  spec.add_dependency "chef", '>= 12.0.0.rc.0'
+  spec.add_dependency "octokit", '~> 3.5.2'
+  spec.add_dependency "net-ssh", '~> 2.9.1'
   spec.add_dependency 'chef-provisioning', '~> 0.16.1'
   spec.add_dependency 'chef-provisioning-fog', '~> 0.11'
-  spec.add_dependency 'chef-vault'
+  spec.add_dependency 'chef-vault', '~> 2.3.0'
   spec.add_development_dependency "bundler", "~> 1.7"
   spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "rspec"
-  spec.add_development_dependency "pry"
+  spec.add_development_dependency "rspec", '~> 3.1.0'
+  spec.add_development_dependency "pry", '~> 0.10.1'
 end

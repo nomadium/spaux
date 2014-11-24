@@ -18,10 +18,10 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "thor"
-  spec.add_dependency "chef"
+  spec.add_dependency "chef", '= 12.0.0.rc.0'
   spec.add_dependency "octokit"
   spec.add_dependency "net-ssh"
-  spec.add_dependency 'chef-provisioning', '~> 0.15.1'
+  spec.add_dependency 'chef-provisioning', '~> 0.16.1'
   spec.add_dependency 'chef-metal-fog'
   spec.add_dependency 'chef-vault'
   spec.add_development_dependency "bundler", "~> 1.7"

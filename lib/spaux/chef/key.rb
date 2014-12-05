@@ -64,5 +64,3 @@ class Spaux
     end
   end
 end
-
-Spaux::Chef::RawKey = Spaux::Chef::Key.new.raw_key

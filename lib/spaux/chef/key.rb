@@ -10,7 +10,7 @@ class Spaux
 
       def initialize(config={})
         @work_dir = ::File.join(ENV['PWD'], 'current')
-        @config = config.merge(default_spaux_config)
+        @config = default_spaux_config.merge(config)
         @raw_key ||= get_raw_key
       end
 

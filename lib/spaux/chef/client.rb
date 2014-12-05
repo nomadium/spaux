@@ -19,12 +19,11 @@ class Spaux
         @config.merge! default_chef_config.merge(chef_config)
 
         default_spaux_config = Spaux::default_spaux_config
-
         @spaux_config = default_spaux_config.merge(spaux_config)
-        #if !@spaux_config.eql?(default_spaux_config)
-          #trigger a reevalutation of the private key
 
-        @config[:raw_key] = Spaux::Chef::RawKey
+        @config[:raw_key] = Spaux::Chef::Key.new(@spaux_config).raw_key
+        # ugly hack but better than another options...
+        redefine_chef_http_authenticator @config[:raw_key]
 
         FileUtils.touch @config[:config_file]
         FileUtils.touch @config[:client_key]
@@ -49,6 +48,15 @@ class Spaux
           super
         rescue SystemExit => e
           # just ignore chef-client exit
+        end
+      end
+
+      private
+      def redefine_chef_http_authenticator(key)
+        ::Chef::HTTP::Authenticator.send(:define_method,
+          'load_signing_key') do |signing_key_filename, raw_key|
+          @raw_key = key
+          @key = OpenSSL::PKey::RSA.new(@raw_key)
         end
       end
     end

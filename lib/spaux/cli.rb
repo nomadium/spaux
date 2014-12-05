@@ -13,13 +13,19 @@ class Spaux
       work_dir = get_work_dir(options)
       FileUtils.mkdir_p work_dir
 
-      client = Spaux::Chef::Client.new(work_dir)
-      client.run
+      begin
+        client = Spaux::Chef::Client.new(work_dir)
+        client.run
+      rescue Errno::ENOENT => e
+        message = 'error: You need to create a ssh keypair'
+        STDERR.puts message if e.message.match(/id_rsa/)
+        abort
+      end
     end
     desc 'savekey', 'Show/save private chef key'
     option :file, :type => :string
     def savekey
-      key = Spaux::Chef::RawKey
+      key = Spaux::Chef::Key.new.raw_key
       if !options[:file]
         puts key
       else

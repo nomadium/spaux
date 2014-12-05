@@ -1,0 +1,30 @@
+{
+  "spaux":{
+    "machine":{
+      "action":"converge",
+      "key_name":"fancy",
+      "name":"shangrila",
+      "runlist":[
+        "ufw",
+        "hostname",
+        "apt",
+        "git",
+        "users::sysadmins",
+        "sudo"
+      ]
+    },
+    "digital_ocean":{
+      "bootstrap_options":{
+        "flavor_name":"512MB"
+      }
+    },
+    "conf_mgmt":{
+      "chef":{
+        "endpoint":"https://api.qirtaiba.org/organizations/xanadu",
+        "options":{
+          "client_name":"xanadu"
+        }
+      }
+    }
+  }
+}

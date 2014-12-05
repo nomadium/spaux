@@ -1,5 +1,6 @@
 require 'thor'
 require 'spaux'
+require 'spaux/cli/ssh_subcommand'
 require 'tmpdir'
 require 'fileutils'
 
@@ -45,6 +46,11 @@ class Spaux
       work_dir = get_work_dir(options)
       knife = Spaux::Chef::Knife.new(work_dir, args)
       knife.run
+    end
+    desc 'ssh', 'Connect via ssh to a node'
+    def ssh(nodename)
+      ssh_cmd = Spaux::CLI::SSHSubcommand.new
+      ssh_cmd.run(nodename, options)
     end
 
     private

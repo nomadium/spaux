@@ -20,6 +20,7 @@ end
 
 #describe Spaux::Chef::Key
 #describe Spaux::Chef::Knife
+#describe Spaux::CLI::SSHSubcommand
 
 describe Spaux::CLI do
   describe '#converge' do

@@ -1,9 +1,12 @@
 class Chef
   class Knife
-   def configure_spaux
-     config.merge!(Spaux::default_chef_config(:knife))
+   def configure_spaux(extra_config)
+     config_file = extra_config[:config_file]
+     default_config = Spaux::default_chef_config(:knife)
+     Chef::Config.merge! default_config.merge(extra_config)
+     Chef::Config.from_file config_file
    end
-   def self.run(args, options={})
+   def self.run(args, options={}, extra_settings={})
       # Fallback debug logging. Normally the logger isn't configured until we
       # read the config, but this means any logging that happens before the
       # config file is read may be lost. If the KNIFE_DEBUG variable is set, we
@@ -19,7 +22,7 @@ class Chef
       subcommand_class.options = options.merge!(subcommand_class.options)
       subcommand_class.load_deps
       instance = subcommand_class.new(args)
-      instance.configure_spaux
+      instance.configure_spaux(extra_settings)
       instance.configure_chef
       instance.run_with_pretty_exceptions
     end

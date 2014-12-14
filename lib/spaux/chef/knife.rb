@@ -6,32 +6,21 @@ class Spaux
   class Chef
     class Knife < ::Chef::Application::Knife
 
-      DEFAULT_KNIFE_CONFIG = {
-        config_file: {
-          flags: %w(--config -c),
-          value: ::File.join('@work_dir', 'knife.rb')
-        }
-      }
-
       attr_accessor :work_dir
       attr_accessor :args
 
       def initialize(work_dir, args)
         @work_dir = work_dir
         @args = args
+        @extra_options = {}
+        @extra_options[:config_file] = ::File.join(@work_dir, 'knife.rb')
 
-        DEFAULT_KNIFE_CONFIG.each do |_,v|
-          v[:value].is_a?(String) && v[:value].gsub!(/@work_dir/, @work_dir)
-        end
+        raw_key = Spaux::Chef::Key.new.raw_key
+        redefine_chef_http_authenticator raw_key
 
-        cf_flags = DEFAULT_KNIFE_CONFIG[:config_file][:flags]
-        unless @args.include?(cf_flags.first) || @args.include?(cf_flags.last)
-          @args << DEFAULT_KNIFE_CONFIG[:config_file][:flags].first
-          @args << DEFAULT_KNIFE_CONFIG[:config_file][:value]
-        end
-
-        config_file = DEFAULT_KNIFE_CONFIG[:config_file][:value]
-        FileUtils.touch config_file
+        # to avoid warnings about missing configuration
+        @args << '--config' << '/dev/null'
+        FileUtils.touch @extra_options[:config_file]
       end
 
       def run
@@ -42,9 +31,18 @@ class Spaux
         knife = ::Chef::Application::Knife.new
         options = knife.options
         begin
-          ::Chef::Knife.run(@args, options)
+          ::Chef::Knife.run(@args, options, @extra_options)
         rescue SystemExit => e
           # just ignore the exit of knife tool
+        end
+      end
+
+      private
+      def redefine_chef_http_authenticator(key)
+        ::Chef::HTTP::Authenticator.send(:define_method,
+          'load_signing_key') do |signing_key_filename, raw_key|
+          @raw_key = key
+          @key = OpenSSL::PKey::RSA.new(@raw_key)
         end
       end
     end

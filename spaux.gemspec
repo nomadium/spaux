@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "chef", '>= 12.0.0.rc.0'
   spec.add_dependency "octokit", '~> 3.5.2'
   spec.add_dependency "net-ssh", '~> 2.9.1'
-  spec.add_dependency 'chef-provisioning', '~> 0.16.1'
+  spec.add_dependency 'chef-provisioning', '~> 0.16'
   spec.add_dependency 'chef-provisioning-fog', '~> 0.11'
   spec.add_dependency 'chef-vault', '~> 2.3.0'
   spec.add_development_dependency "bundler", "~> 1.7"

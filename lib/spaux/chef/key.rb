@@ -1,5 +1,7 @@
 require 'octokit'
 require 'net/ssh'
+require 'yaml'
+require 'rbnacl'
 
 class Spaux
   class Chef
@@ -22,44 +24,49 @@ class Spaux
         configuration = eval(::File.read(config_file))
       end
       def get_raw_key
-        key_filename = 'encrypted.rb'
-        key_file = ::File.join(@work_dir, key_filename)
+        msg_filename = 'message.yml'
+        msg_file = ::File.join(@work_dir, msg_filename)
 
-        if !::File.exists?(key_file)
-          key = retrieve_key_from_gist(@config[:chef_private_key_gist_id])
+        if !::File.exists?(msg_file)
+          msg = retrieve_msg_from_gist(@config[:chef_private_key_gist_id])
           begin
-            ::File.write(key_file, key)
+            ::IO.write(msg_file, msg)
           rescue Exception => e
             puts e.message
           end
         else
-          key = ::File.read(key_file)
+          msg = ::IO.read(msg_file)
         end
 
-        key_hash = eval(key)
-        raw_key = decrypt_key(key_hash, @config[:private_key])
+        message = YAML.safe_load(msg)
+        key = decrypt_message(message, @config[:private_key])
       end
 
-      def retrieve_key_from_gist(gist)
+      def retrieve_msg_from_gist(gist_id)
         client = Octokit::Client.new
-        key_gist = client.gist(gist)
-        key_filename = key_gist[:files].fields.first
-        key_resource = key_gist[:files][key_filename]
-        key_data = key_resource[:content]
+        gist = client.gist(gist_id)
+        filename = gist[:files].fields.first
+        resource = gist[:files][filename]
+        data = resource[:content]
       end
 
-      def decrypt_key(key_data, rsa_key_filename)
+      def decrypt_message(message, rsa_key_filename)
         rsa_key = Net::SSH::KeyFactory.load_private_key(rsa_key_filename)
-        iv = Base64.decode64(key_data[:iv])
-        sym_key = Base64.decode64(key_data[:key])
-        data = Base64.decode64(key_data[:data])
+        recipients = message['recipients']
+        box_key = nil
 
-        decipher = OpenSSL::Cipher::AES.new(@config[:aes_key_size],
-                                            @config[:aes_cipher_mode])
-        decipher.decrypt
-        decipher.iv = rsa_key.private_decrypt(iv)
-        decipher.key = rsa_key.private_decrypt(sym_key)
-        key = decipher.update(data) + decipher.final
+        recipients.each do |r|
+          begin
+            box_key = rsa_key.private_decrypt(Base64.decode64(r))
+          rescue OpenSSL::PKey::RSAError => e
+            next if e.message.eql?('padding check failed')
+          end
+        end
+
+        raise ArgumentError, 'Unable to decrypt message!' if box_key.nil?
+
+        box = ::RbNaCl::SimpleBox.from_secret_key(box_key)
+        clear_message = box.decrypt(Base64.decode64(message['data']))
       end
     end
   end
